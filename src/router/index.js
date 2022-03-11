@@ -1,25 +1,36 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 
 const routes = [
+  // 只有後臺，所以先導線登入頁面
+  { path: '/', redirect: { name: 'login' } },
   {
-    path: '/',
-    name: 'home',
-    component: HomeView
+    path: '/login',
+    name: 'login',
+    component: () => import('../views/LoginView.vue')
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/admin',
+    name: 'admin',
+    component: () => import('../views/AdminPage.vue'),
+    children: [
+      {
+        path: 'products',
+        name: 'admin-products',
+        component: () => import('../views/AdminProducts.vue')
+      },
+      {
+        path: 'coupon',
+        name: 'coupon',
+        component: () => import('../views/AdminOrders.vue')
+      }
+    ]
   }
 ]
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
+  routes,
+  linkExactActiveClass: 'active'
 })
 
 export default router
